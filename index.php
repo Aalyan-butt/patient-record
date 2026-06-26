@@ -3,373 +3,695 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Patient Clinical Records</title>
+<title>ClinicalRecord — Patient Management</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&display=swap" rel="stylesheet">
 <style id="colStyle"></style>
 <style>
-/* ── Reset ───────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════
+   RESET + BASE
+════════════════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:15px;-webkit-text-size-adjust:100%}
-body{font-family:'Inter',system-ui,sans-serif;background:#f0f4f8;color:#1e2a3b;min-height:100vh}
-
-/* ── Variables ───────────────────────────────────────── */
-:root{
-  --blue:#2563eb;--blue-d:#1d4ed8;--blue-l:#eff6ff;
-  --red:#dc2626;--red-l:#fef2f2;
-  --green:#16a34a;--green-l:#f0fdf4;
-  --navy:#1e3a5f;
-  --gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;
-  --gray-300:#cbd5e1;--gray-400:#94a3b8;--gray-500:#64748b;
-  --gray-600:#475569;--gray-700:#334155;--gray-800:#1e293b;
-  --r:10px;
-  --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
-  --sh-md:0 4px 6px -1px rgba(0,0,0,.08),0 2px 4px -1px rgba(0,0,0,.05);
-  --sh-lg:0 10px 25px -3px rgba(0,0,0,.12),0 4px 6px -2px rgba(0,0,0,.06);
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:#EAEef5;
+  color:#0F172A;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  font-feature-settings:'cv02','cv03','cv04';
 }
 
-/* ── Header ──────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════
+   DESIGN TOKENS
+════════════════════════════════════════════════════════ */
+:root{
+  /* Brand */
+  --brand:       #1D4ED8;
+  --brand-dark:  #1239B0;
+  --brand-mid:   #2563EB;
+  --brand-light: #EFF6FF;
+  --brand-glow:  rgba(37,99,235,.22);
+
+  /* Semantic */
+  --red:      #DC2626; --red-l:   #FEF2F2; --red-m:   #FECACA;
+  --green:    #059669; --green-l: #ECFDF5; --green-m: #A7F3D0;
+  --amber:    #D97706; --amber-l: #FFFBEB;
+  --indigo:   #4F46E5; --indigo-l:#EEF2FF;
+  --teal:     #0891B2; --teal-l:  #ECFEFF;
+  --violet:   #7C3AED; --violet-l:#F5F3FF;
+  --pink:     #DB2777; --pink-l:  #FDF2F8;
+
+  /* Neutrals */
+  --navy:      #060D1F;
+  --navy-mid:  #0A1628;
+  --s900:      #0F172A;
+  --s800:      #1E293B;
+  --s700:      #334155;
+  --s600:      #475569;
+  --s500:      #64748B;
+  --s400:      #94A3B8;
+  --s300:      #CBD5E1;
+  --s200:      #E2E8F0;
+  --s100:      #F1F5F9;
+  --s50:       #F8FAFC;
+  --white:     #FFFFFF;
+
+  /* Geometry */
+  --r-xs: 5px;
+  --r-sm: 8px;
+  --r:    12px;
+  --r-md: 14px;
+  --r-lg: 18px;
+
+  /* Elevation */
+  --el-1: 0 1px 2px rgba(15,23,42,.05);
+  --el-2: 0 1px 3px rgba(15,23,42,.08), 0 1px 2px rgba(15,23,42,.04);
+  --el-3: 0 4px 12px rgba(15,23,42,.09), 0 2px 4px rgba(15,23,42,.05);
+  --el-4: 0 8px 24px rgba(15,23,42,.11), 0 4px 8px rgba(15,23,42,.06);
+  --el-5: 0 20px 48px rgba(15,23,42,.14), 0 8px 16px rgba(15,23,42,.07);
+}
+
+/* ════════════════════════════════════════════════════════
+   APP HEADER
+════════════════════════════════════════════════════════ */
 .app-header{
-  background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);
-  color:#fff;padding:0 1.5rem;height:64px;
+  background:var(--navy);
+  background-image:
+    radial-gradient(ellipse 90% 100% at 50% -10%, rgba(37,99,235,.16) 0%, transparent 65%),
+    linear-gradient(180deg, #060D1F 0%, #091424 100%);
+  color:#fff;height:68px;padding:0 2rem;
   display:flex;align-items:center;justify-content:space-between;
   position:sticky;top:0;z-index:100;
-  box-shadow:0 2px 12px rgba(37,99,235,.4);
+  box-shadow:0 1px 0 rgba(255,255,255,.05), 0 8px 32px rgba(0,0,0,.35);
 }
-.app-header h1{font-size:1.1rem;font-weight:700;letter-spacing:-.2px;display:flex;align-items:center;gap:.5rem}
-.hd-sub{font-weight:400;opacity:.6;font-size:.8rem}
 
-/* ── Main ────────────────────────────────────────────── */
-.main-wrap{max-width:1700px;margin:0 auto;padding:1.5rem 1rem 3rem}
-.card{background:#fff;border-radius:var(--r);box-shadow:var(--sh-md);overflow:hidden}
+/* Brand mark */
+.hd-brand{display:flex;align-items:center;gap:.9rem}
+.hd-logo{
+  width:40px;height:40px;flex-shrink:0;
+  background:linear-gradient(135deg,#3B82F6 0%,#6366F1 100%);
+  border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 0 1px rgba(255,255,255,.14) inset,
+             0 4px 14px rgba(99,102,241,.5);
+}
+.hd-title{
+  font-size:.98rem;font-weight:700;letter-spacing:-.25px;
+  color:#fff;line-height:1.15;
+}
+.hd-sub{
+  font-size:.68rem;font-weight:400;letter-spacing:.35px;
+  text-transform:uppercase;color:rgba(255,255,255,.32);margin-top:2px;
+}
 
-/* ── Toolbar ─────────────────────────────────────────── */
+/* Header right */
+.hd-right{display:flex;align-items:center;gap:.9rem}
+.hd-date{
+  font-size:.74rem;font-weight:500;color:rgba(255,255,255,.4);
+  letter-spacing:.15px;white-space:nowrap;
+  padding:.3rem .75rem;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:99px;
+  background:rgba(255,255,255,.04);
+}
+
+/* Premium Add Record button */
+.btn-add{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.58rem 1.2rem;
+  background:linear-gradient(135deg,#3B82F6 0%,#2563EB 50%,#1D4ED8 100%);
+  color:#fff;font-weight:600;font-size:.83rem;font-family:inherit;
+  border:none;border-radius:9px;cursor:pointer;white-space:nowrap;
+  letter-spacing:-.1px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.16) inset,
+             0 4px 14px rgba(37,99,235,.45),
+             0 1px 3px rgba(0,0,0,.2);
+  transition:all .2s cubic-bezier(.4,0,.2,1);
+}
+.btn-add:hover{
+  background:linear-gradient(135deg,#60A5FA 0%,#3B82F6 50%,#2563EB 100%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.22) inset,
+             0 6px 24px rgba(37,99,235,.5),
+             0 2px 6px rgba(0,0,0,.2);
+  transform:translateY(-1px);
+}
+.btn-add:active{transform:translateY(0);transition-duration:.08s}
+.btn-add svg{opacity:.92;flex-shrink:0}
+
+/* ════════════════════════════════════════════════════════
+   PAGE LAYOUT
+════════════════════════════════════════════════════════ */
+.main-wrap{max-width:1840px;margin:0 auto;padding:1.8rem 1.5rem 3rem}
+.main-card{
+  background:var(--white);
+  border-radius:var(--r-md);
+  border:1px solid rgba(15,23,42,.065);
+  box-shadow:var(--el-4);
+  overflow:hidden;
+}
+
+/* ════════════════════════════════════════════════════════
+   TOOLBAR
+════════════════════════════════════════════════════════ */
 .toolbar{
-  display:flex;flex-wrap:wrap;gap:.65rem;align-items:center;
-  padding:.9rem 1.1rem;border-bottom:1px solid var(--gray-200);background:var(--gray-50);
+  display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;
+  padding:1rem 1.25rem;
+  background:var(--white);
+  border-bottom:1px solid var(--s100);
 }
-.search-wrap{position:relative;flex:1;min-width:200px}
-.search-wrap svg{position:absolute;left:.7rem;top:50%;transform:translateY(-50%);color:var(--gray-400);pointer-events:none}
+
+/* Search */
+.search-wrap{position:relative;flex:1;min-width:220px;max-width:540px}
+.search-icon{
+  position:absolute;left:.9rem;top:50%;transform:translateY(-50%);
+  color:var(--s400);pointer-events:none;
+}
 .search-input{
-  width:100%;padding:.5rem .7rem .5rem 2.2rem;
-  border:1px solid var(--gray-300);border-radius:8px;
-  font-size:.85rem;font-family:inherit;background:#fff;
-  transition:border-color .2s,box-shadow .2s;
+  width:100%;
+  padding:.6rem .9rem .6rem 2.55rem;
+  border:1.5px solid var(--s200);border-radius:9px;
+  font-size:.84rem;font-family:inherit;font-weight:500;
+  background:var(--s50);color:var(--s800);
+  transition:all .18s;
 }
-.search-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
-.search-input::placeholder{color:var(--gray-400)}
-
-.toolbar-right{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
-.per-page-wrap{display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--gray-600)}
-.per-page-select{
-  padding:.38rem .6rem;border:1px solid var(--gray-300);border-radius:7px;
-  font-size:.8rem;font-family:inherit;background:#fff;cursor:pointer;
+.search-input:focus{
+  outline:none;border-color:var(--brand-mid);background:#fff;
+  box-shadow:0 0 0 3px rgba(37,99,235,.10);
 }
-.per-page-select:focus{outline:none;border-color:var(--blue)}
-.rec-count{font-size:.78rem;color:var(--gray-400);white-space:nowrap}
+.search-input::placeholder{color:var(--s400);font-weight:400}
 
-/* ── Buttons ─────────────────────────────────────────── */
+/* Right controls */
+.toolbar-right{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.per-page-wrap{display:flex;align-items:center;gap:.4rem}
+.per-page-label{font-size:.78rem;color:var(--s500);font-weight:500}
+.per-page-sel{
+  padding:.42rem .7rem;border:1.5px solid var(--s200);border-radius:7px;
+  font-size:.8rem;font-family:inherit;font-weight:600;
+  background:var(--s50);color:var(--s700);cursor:pointer;
+  transition:all .15s;
+}
+.per-page-sel:focus{outline:none;border-color:var(--brand-mid)}
+
+.rec-pill{
+  display:inline-flex;align-items:center;
+  background:var(--brand-light);color:var(--brand);
+  font-size:.72rem;font-weight:700;
+  padding:.28rem .75rem;border-radius:99px;
+  letter-spacing:.1px;white-space:nowrap;
+  border:1px solid rgba(37,99,235,.15);
+}
+
+/* ════════════════════════════════════════════════════════
+   BUTTONS (general)
+════════════════════════════════════════════════════════ */
 .btn{
-  display:inline-flex;align-items:center;gap:.4rem;
-  padding:.48rem 1rem;border-radius:8px;font-size:.83rem;font-weight:600;
-  font-family:inherit;cursor:pointer;border:none;transition:all .18s;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:.42rem;
+  padding:.5rem 1rem;border-radius:8px;
+  font-size:.82rem;font-weight:600;font-family:inherit;
+  cursor:pointer;border:none;transition:all .18s;
+  white-space:nowrap;letter-spacing:-.1px;
 }
-.btn-primary{background:var(--blue);color:#fff}
-.btn-primary:hover{background:var(--blue-d);box-shadow:var(--sh-md)}
-.btn-danger{background:var(--red);color:#fff}
-.btn-danger:hover{background:#b91c1c}
-.btn-ghost{background:transparent;color:var(--gray-600);border:1px solid var(--gray-300)}
-.btn-ghost:hover{background:var(--gray-100);color:var(--gray-800)}
+.btn-primary{
+  background:linear-gradient(135deg,#3B82F6,var(--brand));color:#fff;
+  box-shadow:0 2px 8px var(--brand-glow),0 1px 2px rgba(0,0,0,.1);
+}
+.btn-primary:hover{
+  background:linear-gradient(135deg,#60A5FA,#3B82F6);
+  transform:translateY(-1px);box-shadow:0 4px 18px var(--brand-glow);
+}
+.btn-danger{
+  background:linear-gradient(135deg,#EF4444,#DC2626);color:#fff;
+  box-shadow:0 2px 8px rgba(220,38,38,.22);
+}
+.btn-danger:hover{
+  background:linear-gradient(135deg,#F87171,#EF4444);
+  transform:translateY(-1px);box-shadow:0 4px 16px rgba(220,38,38,.32);
+}
+.btn-ghost{
+  background:var(--s50);color:var(--s600);
+  border:1.5px solid var(--s200);
+}
+.btn-ghost:hover{background:var(--s100);color:var(--s800);border-color:var(--s300)}
+.btn svg{flex-shrink:0}
 
-/* ── Column visibility toggle ────────────────────────── */
+/* ════════════════════════════════════════════════════════
+   COLUMN VISIBILITY PANEL
+════════════════════════════════════════════════════════ */
 .col-toggle-wrap{position:relative}
 .col-btn{position:relative}
 .col-hidden-badge{
   position:absolute;top:-5px;right:-5px;
   background:var(--red);color:#fff;
   width:17px;height:17px;border-radius:50%;
-  font-size:.62rem;font-weight:700;
+  font-size:.6rem;font-weight:700;
   display:none;align-items:center;justify-content:center;
-  line-height:1;
 }
 .col-panel{
-  position:absolute;top:calc(100% + 8px);right:0;
-  width:310px;
-  background:#fff;border:1px solid var(--gray-200);
-  border-radius:12px;box-shadow:var(--sh-lg);
-  z-index:200;display:none;
-  animation:panelIn .15s ease;
+  position:absolute;top:calc(100% + 10px);right:0;width:330px;
+  background:#fff;border:1px solid var(--s200);border-radius:var(--r-md);
+  box-shadow:var(--el-5);z-index:200;display:none;
+  animation:panelDrop .18s cubic-bezier(.4,0,.2,1);
 }
-@keyframes panelIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@keyframes panelDrop{from{opacity:0;transform:translateY(-10px) scale(.96)}to{opacity:1;transform:none}}
 .col-panel.open{display:block}
 .col-panel-head{
   display:flex;align-items:center;justify-content:space-between;
-  padding:.7rem 1rem;border-bottom:1px solid var(--gray-200);
-  position:sticky;top:0;background:#fff;border-radius:12px 12px 0 0;z-index:1;
+  padding:.75rem 1.05rem;border-bottom:1px solid var(--s100);
+  background:var(--s50);border-radius:var(--r-md) var(--r-md) 0 0;
 }
-.col-panel-head span{font-size:.8rem;font-weight:700;color:var(--gray-700)}
+.col-panel-head span{font-size:.8rem;font-weight:700;color:var(--s700)}
 .col-reset{
-  font-size:.72rem;color:var(--blue);background:none;border:none;
-  cursor:pointer;font-family:inherit;font-weight:600;padding:.2rem .4rem;
-  border-radius:4px;transition:background .15s;
+  font-size:.72rem;color:var(--brand);background:none;border:none;
+  cursor:pointer;font-family:inherit;font-weight:600;
+  padding:.2rem .5rem;border-radius:5px;transition:background .15s;
 }
-.col-reset:hover{background:var(--blue-l)}
+.col-reset:hover{background:var(--brand-light)}
 .col-panel-scroll{
-  max-height:270px;overflow-y:auto;
-  scrollbar-width:thin;scrollbar-color:var(--gray-300) transparent;
+  max-height:280px;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:var(--s300) transparent;
 }
-.col-panel-scroll::-webkit-scrollbar{width:5px}
-.col-panel-scroll::-webkit-scrollbar-track{background:transparent}
-.col-panel-scroll::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:99px}
+.col-panel-scroll::-webkit-scrollbar{width:4px}
+.col-panel-scroll::-webkit-scrollbar-thumb{background:var(--s300);border-radius:99px}
 .col-panel-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:2px;padding:.5rem .6rem .7rem;
+  display:grid;grid-template-columns:1fr 1fr;gap:2px;padding:.6rem .65rem .75rem;
 }
 .col-item{
-  display:flex;align-items:center;gap:.4rem;
-  padding:.38rem .55rem;border-radius:6px;cursor:pointer;
-  font-size:.78rem;color:var(--gray-700);user-select:none;transition:background .12s;
+  display:flex;align-items:center;gap:.42rem;
+  padding:.42rem .65rem;border-radius:7px;cursor:pointer;
+  font-size:.78rem;color:var(--s600);user-select:none;
+  transition:background .12s,color .12s;font-weight:500;
 }
-.col-item:hover{background:var(--gray-100)}
-.col-item input[type=checkbox]{accent-color:var(--blue);cursor:pointer;width:13px;height:13px;flex-shrink:0}
-.col-item.locked{opacity:.45;cursor:not-allowed;pointer-events:none}
+.col-item:hover{background:var(--brand-light);color:var(--brand)}
+.col-item input[type=checkbox]{accent-color:var(--brand-mid);cursor:pointer;width:13px;height:13px;flex-shrink:0}
+.col-item.locked{opacity:.38;cursor:not-allowed;pointer-events:none}
 
-/* ── Table ───────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════
+   DATA TABLE
+════════════════════════════════════════════════════════ */
 .table-wrap{
   overflow-x:auto;overflow-y:auto;
-  max-height:calc(100vh - 240px);
+  max-height:calc(100vh - 252px);
   -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:var(--s300) transparent;
 }
-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.table-wrap::-webkit-scrollbar{height:5px;width:5px}
+.table-wrap::-webkit-scrollbar-thumb{background:var(--s300);border-radius:99px}
+table{width:100%;border-collapse:collapse;font-size:.83rem}
+
+/* Header */
 thead th{
-  background:var(--navy);color:#cfe0ff;
-  font-weight:600;font-size:.72rem;letter-spacing:.4px;text-transform:uppercase;
-  padding:.7rem .85rem;white-space:nowrap;text-align:left;
-  border-right:1px solid rgba(255,255,255,.06);
+  background:#0C1629;
+  color:rgba(203,213,225,.82);
+  font-weight:600;font-size:.67rem;letter-spacing:.65px;
+  text-transform:uppercase;
+  padding:.85rem 1.05rem;
+  white-space:nowrap;text-align:left;
+  border-right:1px solid rgba(255,255,255,.04);
   position:sticky;top:0;z-index:10;
 }
-thead th:last-child{border-right:none}
-tbody tr{border-bottom:1px solid var(--gray-100);transition:background .1s}
-tbody tr:hover{background:var(--blue-l)}
+thead th:last-child{border-right:none;text-align:center}
+thead th:first-child{padding-left:1.3rem}
+
+/* Body rows */
+tbody tr{
+  border-bottom:1px solid var(--s100);
+  transition:background .13s, box-shadow .13s;
+}
+tbody tr:nth-child(even){background:#FAFBFD}
+tbody tr:hover{
+  background:#EFF6FF;
+  box-shadow:inset 3px 0 0 var(--brand-mid);
+}
 tbody td{
-  padding:.65rem .85rem;vertical-align:middle;color:var(--gray-700);
+  padding:.75rem 1.05rem;
+  vertical-align:middle;color:var(--s700);
   max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:.82rem;
 }
 tbody td.td-wide{max-width:220px}
-tbody td.td-act{max-width:none;white-space:nowrap;padding:.5rem .7rem}
+tbody td.td-act{max-width:none;white-space:nowrap;padding:.5rem .85rem;text-align:center}
+tbody td:first-child{padding-left:1.3rem;color:var(--s400);font-size:.72rem;font-weight:600}
 
-/* ── PDF Modal ───────────────────────────────────────── */
-.pdf-modal{max-width:460px}
-.pdf-modal .modal-body{padding:1.5rem}
-.pdf-section{margin-bottom:1.2rem}
-.pdf-section-label{
-  font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
-  color:var(--gray-500);margin-bottom:.6rem;display:block;
-}
-.option-group{display:flex;gap:.5rem;flex-wrap:wrap}
-.opt-btn{
-  padding:.42rem .9rem;border-radius:7px;
-  font-size:.82rem;font-weight:600;cursor:pointer;
-  border:2px solid var(--gray-200);background:#fff;
-  color:var(--gray-600);font-family:inherit;transition:all .15s;
-}
-.opt-btn:hover{border-color:var(--blue);color:var(--blue)}
-.opt-btn.sel{border-color:var(--blue);background:var(--blue);color:#fff}
-.uid-found{color:#16a34a;font-weight:600}
-.uid-new{color:#64748b}
-.uid-checking{color:#2563eb}
-.uid-prefilled{
-  background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;
-  padding:.45rem .75rem;margin-top:.5rem;font-size:.78rem;color:#15803d;
-  display:flex;align-items:center;gap:.4rem;
-  grid-column:1/-1;
-}
-.pdf-info{
-  background:var(--blue-l);border:1px solid #bfdbfe;border-radius:8px;
-  padding:.65rem 1rem;font-size:.8rem;color:var(--blue);
-  display:flex;align-items:center;gap:.5rem;margin-top:.5rem;
-}
-
-/* Badges */
+/* ════════════════════════════════════════════════════════
+   BADGES
+════════════════════════════════════════════════════════ */
 .uid-badge{
   display:inline-flex;align-items:center;
-  background:var(--blue-l);color:var(--blue);
-  font-weight:700;font-size:.78rem;padding:.18rem .55rem;border-radius:5px;letter-spacing:.5px;
+  background:linear-gradient(135deg,#EFF6FF,#DBEAFE);
+  color:var(--brand);
+  font-weight:700;font-size:.73rem;
+  padding:.24rem .7rem;border-radius:6px;
+  letter-spacing:.55px;
+  border:1px solid rgba(37,99,235,.18);
+  font-variant-numeric:tabular-nums;
 }
 .visit-badge{
   display:inline-flex;align-items:center;justify-content:center;
-  width:24px;height:24px;background:var(--gray-100);
-  color:var(--gray-600);font-weight:600;font-size:.72rem;border-radius:50%;
+  min-width:28px;height:28px;
+  background:var(--s100);color:var(--s600);
+  font-weight:700;font-size:.72rem;
+  border-radius:50%;border:2px solid var(--s200);
+  padding:0 .3rem;
 }
 .g-badge{
-  display:inline-block;padding:.18rem .5rem;border-radius:5px;
-  font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;
+  display:inline-flex;align-items:center;
+  padding:.24rem .65rem;border-radius:99px;
+  font-size:.68rem;font-weight:700;
+  letter-spacing:.3px;text-transform:uppercase;white-space:nowrap;
 }
-.g-m{background:#dbeafe;color:#1d4ed8}
-.g-f{background:#fce7f3;color:#9d174d}
-.g-o{background:#f3e8ff;color:#6b21a8}
+.g-m{background:#DBEAFE;color:#1D4ED8;border:1px solid #BFDBFE}
+.g-f{background:#FCE7F3;color:#9D174D;border:1px solid #FBCFE8}
+.g-o{background:#EDE9FE;color:#5B21B6;border:1px solid #DDD6FE}
 
-/* Action buttons */
+.name-cell{font-weight:600;color:var(--s800)}
+
+/* ════════════════════════════════════════════════════════
+   ACTION BUTTONS
+════════════════════════════════════════════════════════ */
 .act-btn{
-  display:inline-flex;align-items:center;gap:.28rem;
-  padding:.3rem .65rem;border-radius:6px;
-  font-size:.74rem;font-weight:600;cursor:pointer;border:none;font-family:inherit;
-  transition:all .14s;margin-right:.25rem;
+  display:inline-flex;align-items:center;gap:.3rem;
+  padding:.34rem .8rem;border-radius:7px;
+  font-size:.73rem;font-weight:600;
+  cursor:pointer;font-family:inherit;
+  transition:all .16s cubic-bezier(.4,0,.2,1);
 }
-.act-edit{background:#eff6ff;color:var(--blue)}
-.act-edit:hover{background:var(--blue);color:#fff}
-.act-del{background:var(--red-l);color:var(--red)}
-.act-del:hover{background:var(--red);color:#fff}
+.act-edit{
+  background:var(--brand-light);color:var(--brand);
+  border:1.5px solid rgba(37,99,235,.18);
+}
+.act-edit:hover{
+  background:var(--brand-mid);color:#fff;border-color:var(--brand-mid);
+  transform:translateY(-1px);box-shadow:0 3px 12px var(--brand-glow);
+}
+.act-del{
+  background:var(--red-l);color:var(--red);
+  border:1.5px solid rgba(220,38,38,.18);margin-left:.35rem;
+}
+.act-del:hover{
+  background:var(--red);color:#fff;border-color:var(--red);
+  transform:translateY(-1px);box-shadow:0 3px 12px rgba(220,38,38,.28);
+}
 
-/* ── Empty / Loading ─────────────────────────────────── */
-.tbl-empty{text-align:center;padding:3.5rem 1rem;color:var(--gray-400)}
-.tbl-empty svg{display:block;margin:0 auto .75rem;opacity:.3}
+/* ════════════════════════════════════════════════════════
+   EMPTY / LOADING STATES
+════════════════════════════════════════════════════════ */
+.tbl-empty{text-align:center;padding:4.5rem 1rem;color:var(--s400)}
+.tbl-empty svg{display:block;margin:0 auto 1rem;opacity:.22}
+.tbl-empty p{font-size:.88rem;font-weight:500;margin-top:.4rem;color:var(--s400)}
 .spinner{
-  display:inline-block;width:24px;height:24px;
-  border:3px solid var(--gray-200);border-top-color:var(--blue);
-  border-radius:50%;animation:spin .55s linear infinite;
+  display:inline-block;width:28px;height:28px;
+  border:3px solid var(--s200);border-top-color:var(--brand-mid);
+  border-radius:50%;animation:spin .6s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ── Footer ──────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════
+   TABLE FOOTER + PAGINATION
+════════════════════════════════════════════════════════ */
 .tbl-footer{
   display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.7rem;
-  padding:.8rem 1.1rem;border-top:1px solid var(--gray-200);background:var(--gray-50);
-  font-size:.79rem;color:var(--gray-500);
+  padding:.9rem 1.25rem;border-top:1px solid var(--s100);
+  background:var(--s50);
+  font-size:.78rem;color:var(--s500);font-weight:500;
 }
 .pagination{display:flex;gap:.3rem;flex-wrap:wrap}
 .pg-btn{
-  min-width:32px;height:32px;padding:0 .5rem;
+  min-width:34px;height:34px;padding:0 .5rem;
   display:flex;align-items:center;justify-content:center;
-  border:1px solid var(--gray-200);border-radius:7px;background:#fff;
-  color:var(--gray-600);font-size:.78rem;font-weight:500;cursor:pointer;transition:all .14s;
+  border:1.5px solid var(--s200);border-radius:8px;
+  background:#fff;color:var(--s600);
+  font-size:.78rem;font-weight:600;cursor:pointer;
+  transition:all .15s;font-family:inherit;
 }
-.pg-btn:hover:not(:disabled){border-color:var(--blue);color:var(--blue);background:var(--blue-l)}
-.pg-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
-.pg-btn:disabled{opacity:.35;cursor:not-allowed}
+.pg-btn:hover:not(:disabled){
+  border-color:var(--brand-mid);color:var(--brand-mid);background:var(--brand-light);
+  transform:translateY(-1px);box-shadow:0 2px 8px var(--brand-glow);
+}
+.pg-btn.active{
+  background:linear-gradient(135deg,#3B82F6,var(--brand));
+  color:#fff;border-color:transparent;
+  box-shadow:0 2px 10px var(--brand-glow);
+}
+.pg-btn:disabled{opacity:.3;cursor:not-allowed}
 
-/* ── Modal ───────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════
+   OVERLAY + MODAL
+════════════════════════════════════════════════════════ */
 .overlay{
   position:fixed;inset:0;z-index:300;
-  background:rgba(15,23,42,.55);
+  background:rgba(5,10,20,.7);
+  backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
   display:flex;align-items:flex-start;justify-content:center;
   padding:1.5rem 1rem 2rem;overflow-y:auto;
-  opacity:0;pointer-events:none;transition:opacity .2s;
+  opacity:0;pointer-events:none;transition:opacity .22s;
 }
 .overlay.open{opacity:1;pointer-events:all}
 .modal{
-  background:#fff;border-radius:14px;box-shadow:var(--sh-lg);
-  width:100%;max-width:880px;
-  transform:translateY(18px);transition:transform .22s;
+  background:#fff;border-radius:var(--r-lg);
+  box-shadow:var(--el-5),0 0 0 1px rgba(15,23,42,.06);
+  width:100%;max-width:920px;
+  transform:translateY(28px) scale(.965);
+  transition:transform .28s cubic-bezier(.34,1.08,.64,1);
+  overflow:hidden;
 }
-.overlay.open .modal{transform:translateY(0)}
+.overlay.open .modal{transform:translateY(0) scale(1)}
+
+/* Modal header */
 .modal-hdr{
   display:flex;align-items:center;justify-content:space-between;
-  padding:1rem 1.4rem;border-bottom:1px solid var(--gray-200);
-  background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);
-  border-radius:14px 14px 0 0;
+  padding:1.1rem 1.55rem;
+  background:linear-gradient(135deg,#060D1F 0%,#0C1832 60%,#0A1428 100%);
+  position:relative;overflow:hidden;
 }
-.modal-hdr h2{color:#fff;font-size:.95rem;font-weight:700;display:flex;align-items:center;gap:.45rem}
+.modal-hdr::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 120% at 20% 50%,rgba(37,99,235,.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.modal-hdr::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,#3B82F6,#6366F1,#06B6D4);
+}
+.modal-hdr h2{
+  color:#fff;font-size:.95rem;font-weight:700;
+  display:flex;align-items:center;gap:.6rem;letter-spacing:-.1px;
+}
+.hdr-icon-wrap{
+  width:32px;height:32px;flex-shrink:0;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+}
 .modal-x{
-  background:rgba(255,255,255,.2);border:none;color:#fff;
-  width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:.95rem;transition:background .14s;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.65);
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:.9rem;flex-shrink:0;
+  transition:all .15s;
 }
-.modal-x:hover{background:rgba(255,255,255,.35)}
-.modal-body{padding:1.4rem}
+.modal-x:hover{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.22)}
+
+.modal-body{
+  padding:1.5rem;
+  max-height:calc(100vh - 210px);overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:var(--s300) transparent;
+}
+.modal-body::-webkit-scrollbar{width:4px}
+.modal-body::-webkit-scrollbar-thumb{background:var(--s300);border-radius:99px}
 .modal-foot{
-  display:flex;justify-content:flex-end;gap:.65rem;
-  padding:.9rem 1.4rem;border-top:1px solid var(--gray-200);
-  background:var(--gray-50);border-radius:0 0 14px 14px;
+  display:flex;justify-content:flex-end;align-items:center;gap:.7rem;
+  padding:.95rem 1.55rem;
+  border-top:1px solid var(--s100);
+  background:var(--s50);border-radius:0 0 var(--r-lg) var(--r-lg);
 }
 
-/* ── Form ────────────────────────────────────────────── */
-.fsec{margin-bottom:1.2rem}
+/* ════════════════════════════════════════════════════════
+   FORM
+════════════════════════════════════════════════════════ */
+.fsec{
+  margin-bottom:1.1rem;
+  border:1px solid var(--s200);border-radius:var(--r);
+  overflow:hidden;background:#fff;
+}
+.fsec:last-child{margin-bottom:0}
 .fsec-title{
-  font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
-  color:var(--blue);margin-bottom:.7rem;padding-bottom:.35rem;
-  border-bottom:2px solid var(--blue-l);
+  font-size:.69rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;
+  color:var(--brand);
+  padding:.56rem 1rem;
+  background:linear-gradient(90deg,rgba(239,246,255,.9),rgba(239,246,255,.3),transparent);
+  border-bottom:1px solid rgba(37,99,235,.09);
+  display:flex;align-items:center;gap:.45rem;
 }
-.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:.75rem}
+.fsec-title svg{opacity:.65;flex-shrink:0}
+.fsec-body{padding:1rem}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.85rem}
 .fgrid-2{grid-template-columns:1fr 1fr}
-.fg{display:flex;flex-direction:column;gap:.3rem}
-.fg label{font-size:.74rem;font-weight:600;color:var(--gray-600)}
-.fg label .req{color:var(--red);margin-left:2px}
+.fg{display:flex;flex-direction:column;gap:.34rem}
+.fg label{
+  font-size:.73rem;font-weight:600;color:var(--s600);
+  display:flex;align-items:center;gap:.3rem;
+  letter-spacing:.08px;
+}
+.fg label .req{color:var(--red);margin-left:1px;font-size:.8rem}
 .fc{
-  padding:.48rem .65rem;border:1px solid var(--gray-300);border-radius:7px;
-  font-size:.84rem;font-family:inherit;background:#fff;width:100%;
-  transition:border-color .2s,box-shadow .2s;
+  padding:.54rem .78rem;
+  border:1.5px solid var(--s200);border-radius:var(--r-sm);
+  font-size:.84rem;font-family:inherit;font-weight:500;
+  background:var(--s50);color:var(--s800);width:100%;
+  transition:all .18s;
 }
-.fc:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
-.fc.invalid{border-color:var(--red)!important;box-shadow:0 0 0 3px rgba(220,38,38,.1)}
-textarea.fc{resize:vertical;min-height:68px}
+.fc:focus{
+  outline:none;border-color:var(--brand-mid);background:#fff;
+  box-shadow:0 0 0 3px rgba(37,99,235,.10);
+}
+.fc.invalid{border-color:var(--red)!important;box-shadow:0 0 0 3px rgba(220,38,38,.10)!important}
+textarea.fc{resize:vertical;min-height:74px;line-height:1.55}
+select.fc{cursor:pointer}
 
-/* ── Confirm modal ───────────────────────────────────── */
-.conf-modal{max-width:400px}
-.conf-modal .modal-body{text-align:center;padding:2rem 1.5rem}
-.conf-modal .modal-body svg{color:var(--red);margin:0 auto .75rem;display:block}
-.conf-modal h3{font-size:1rem;font-weight:700;margin-bottom:.4rem}
-.conf-modal p{font-size:.84rem;color:var(--gray-500)}
+/* UID auto-fill status */
+.uid-found   {color:var(--green);font-weight:600;display:flex;align-items:center;gap:.3rem}
+.uid-new     {color:var(--s500);font-weight:500;display:flex;align-items:center;gap:.3rem}
+.uid-checking{color:var(--brand-mid);font-weight:500;display:flex;align-items:center;gap:.3rem;animation:pulse .9s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.uid-prefilled{
+  background:var(--green-l);border:1px solid var(--green-m);
+  border-radius:7px;padding:.48rem .9rem;margin-top:.35rem;
+  font-size:.76rem;color:var(--green);
+  display:flex;align-items:center;gap:.4rem;
+  grid-column:1/-1;font-weight:500;
+}
 
-/* ── Toast ───────────────────────────────────────────── */
-#toasts{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;flex-direction:column;gap:.45rem;z-index:500}
+/* ════════════════════════════════════════════════════════
+   CONFIRM + PDF MODALS
+════════════════════════════════════════════════════════ */
+.pdf-modal{max-width:490px}
+.pdf-modal .modal-body{padding:1.5rem}
+.pdf-section{margin-bottom:1.35rem}
+.pdf-section-label{
+  font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.65px;
+  color:var(--s500);margin-bottom:.7rem;display:block;
+}
+.option-group{display:flex;gap:.5rem;flex-wrap:wrap}
+.opt-btn{
+  padding:.48rem 1.05rem;border-radius:8px;
+  font-size:.82rem;font-weight:600;cursor:pointer;
+  border:1.5px solid var(--s200);background:var(--s50);
+  color:var(--s600);font-family:inherit;
+  transition:all .15s;
+  display:inline-flex;align-items:center;gap:.38rem;
+}
+.opt-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid);background:var(--brand-light)}
+.opt-btn.sel{
+  border-color:transparent;
+  background:linear-gradient(135deg,#3B82F6,var(--brand));
+  color:#fff;box-shadow:0 2px 10px var(--brand-glow);
+}
+.pdf-info{
+  background:var(--brand-light);border:1px solid #BFDBFE;border-radius:9px;
+  padding:.72rem 1rem;font-size:.8rem;color:var(--brand);
+  display:flex;align-items:center;gap:.55rem;font-weight:500;
+}
+
+.conf-modal{max-width:430px}
+.conf-modal .modal-body{text-align:center;padding:2.2rem 1.75rem 1.75rem}
+.conf-icon-ring{
+  width:68px;height:68px;border-radius:50%;
+  background:var(--red-l);border:2px solid var(--red-m);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.2rem;
+}
+.conf-modal h3{font-size:1.05rem;font-weight:700;margin-bottom:.5rem;color:var(--s900)}
+.conf-modal p{font-size:.84rem;color:var(--s500);line-height:1.65}
+
+/* ════════════════════════════════════════════════════════
+   TOAST NOTIFICATIONS
+════════════════════════════════════════════════════════ */
+#toasts{
+  position:fixed;top:1.25rem;right:1.5rem;
+  display:flex;flex-direction:column;gap:.5rem;z-index:500;
+}
 .toast{
-  display:flex;align-items:center;gap:.55rem;
-  padding:.7rem 1rem;border-radius:9px;box-shadow:var(--sh-lg);
-  font-size:.82rem;font-weight:500;min-width:230px;max-width:320px;color:#fff;
-  animation:toastIn .22s ease;
+  display:flex;align-items:center;gap:.65rem;
+  padding:.78rem 1.1rem;border-radius:11px;
+  box-shadow:var(--el-5),0 0 0 1px rgba(255,255,255,.12) inset;
+  font-size:.82rem;font-weight:600;
+  min-width:240px;max-width:340px;color:#fff;
+  animation:toastIn .26s cubic-bezier(.34,1.08,.64,1);
 }
-.toast.success{background:var(--green)}
-.toast.error{background:var(--red)}
-.toast.info{background:var(--blue)}
-@keyframes toastIn{from{opacity:0;transform:translateX(50px)}to{opacity:1;transform:none}}
+.toast.success{background:linear-gradient(135deg,#10B981,#059669)}
+.toast.error  {background:linear-gradient(135deg,#EF4444,#DC2626)}
+.toast.info   {background:linear-gradient(135deg,#3B82F6,#1D4ED8)}
+@keyframes toastIn{from{opacity:0;transform:translateX(60px) scale(.92)}to{opacity:1;transform:none}}
 
-/* ── Responsive ──────────────────────────────────────── */
-@media(max-width:640px){
-  .hd-sub{display:none}
-  .toolbar{flex-direction:column;align-items:stretch}
-  .toolbar-right{justify-content:space-between}
+/* ════════════════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════════════════ */
+@media(max-width:768px){
+  .app-header{padding:0 1rem;height:60px}
+  .hd-date{display:none}
+  .main-wrap{padding:1rem .75rem 2.5rem}
+  .toolbar{flex-direction:column;align-items:stretch;padding:.85rem}
+  .toolbar-right{flex-wrap:wrap;gap:.4rem}
+  .search-wrap{max-width:none}
   .fgrid{grid-template-columns:1fr 1fr}
   .fgrid-2{grid-template-columns:1fr}
-  .modal-body{padding:.9rem}
-  .col-panel{right:-60px;width:270px}
+  .modal-body{padding:1rem;max-height:calc(100vh - 180px)}
+  .col-panel{width:288px;right:-44px}
+  .btn-add span{display:none}
 }
-@media(max-width:380px){
+@media(max-width:440px){
   .fgrid{grid-template-columns:1fr}
-  .btn span{display:none}
+  .hd-sub{display:none}
+  .rec-pill{display:none}
+  .modal-foot{padding:.8rem 1rem}
 }
 </style>
 </head>
 <body>
 
-<!-- ── Header ───────────────────────────────────────────────── -->
+<!-- ══════════════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════════════ -->
 <header class="app-header">
-  <h1>
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-    Patient Clinical Records
-    <span class="hd-sub">| Management System</span>
-  </h1>
-  <button class="btn btn-primary" onclick="openAddModal()">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    <span>Add Record</span>
-  </button>
+  <div class="hd-brand">
+    <div class="hd-logo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+    </div>
+    <div>
+      <div class="hd-title">Clinical Records</div>
+      <div class="hd-sub">Patient Management System</div>
+    </div>
+  </div>
+  <div class="hd-right">
+    <span class="hd-date" id="hdDate"></span>
+    <button class="btn-add" onclick="openAddModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span>Add Record</span>
+    </button>
+  </div>
 </header>
 
-<!-- ── Main ─────────────────────────────────────────────────── -->
+<!-- ══════════════════════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════════════════════ -->
 <main class="main-wrap">
-<div class="card">
+<div class="main-card">
 
   <!-- Toolbar -->
   <div class="toolbar">
     <div class="search-wrap">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input class="search-input" id="searchInput" type="search"
-        placeholder="Search name, unique ID (shows all visits), phone, symptoms…" autocomplete="off">
+        placeholder="Search by name, ID, phone, symptoms, findings…" autocomplete="off">
     </div>
     <div class="toolbar-right">
-      <!-- Column visibility -->
+
+      <!-- Columns toggle -->
       <div class="col-toggle-wrap" id="colToggleWrap">
         <button class="btn btn-ghost col-btn" id="colsBtn" onclick="toggleColPanel()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
           <span>Columns</span>
           <span class="col-hidden-badge" id="colHiddenBadge"></span>
         </button>
@@ -385,20 +707,21 @@ textarea.fc{resize:vertical;min-height:68px}
       </div>
 
       <div class="per-page-wrap">
-        <label for="perPage">Show:</label>
-        <select class="per-page-select" id="perPage">
+        <span class="per-page-label">Show</span>
+        <select class="per-page-sel" id="perPage">
           <option value="25">25</option>
           <option value="50">50</option>
           <option value="100">100</option>
           <option value="0">All</option>
         </select>
       </div>
-      <span class="rec-count" id="recCount"></span>
 
-      <!-- Download PDF -->
-      <button class="btn btn-ghost" onclick="openPdfModal()" style="color:#dc2626;border-color:#fca5a5">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        <span>Download PDF</span>
+      <span class="rec-pill" id="recCount"></span>
+
+      <button class="btn btn-ghost" onclick="openPdfModal()"
+        style="color:var(--red);border-color:rgba(220,38,38,.22);background:#FEF2F2">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>Export PDF</span>
       </button>
     </div>
   </div>
@@ -413,7 +736,7 @@ textarea.fc{resize:vertical;min-height:68px}
           <th class="col-date">Date</th>
           <th class="col-time">Time</th>
           <th class="col-visit">Visit</th>
-          <th class="col-name">Name</th>
+          <th class="col-name">Patient Name</th>
           <th class="col-parentage">Parentage</th>
           <th class="col-age">Age</th>
           <th class="col-gender">Gender</th>
@@ -441,111 +764,139 @@ textarea.fc{resize:vertical;min-height:68px}
 </div>
 </main>
 
-<!-- ════════════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════════
      ADD / EDIT MODAL
-════════════════════════════════════════════════════ -->
+══════════════════════════════════════════════════════ -->
 <div class="overlay" id="formOverlay">
 <div class="modal">
   <div class="modal-hdr">
     <h2 id="modalTitle">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span class="hdr-icon-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#93C5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </span>
       Add New Record
     </h2>
     <button class="modal-x" onclick="closeModal('formOverlay')">✕</button>
   </div>
+
   <div class="modal-body">
     <form id="recordForm" novalidate>
       <input type="hidden" id="fId">
 
+      <!-- Patient Identity -->
       <div class="fsec">
-        <div class="fsec-title">Patient Identity</div>
-        <div class="fgrid">
-          <div class="fg">
-            <label>Unique ID <span class="req">*</span></label>
-            <input class="fc" id="fUid" placeholder="Auto…" maxlength="10" autocomplete="off">
-            <span id="uidStatus" style="font-size:.72rem;margin-top:2px;display:none"></span>
-          </div>
-          <div class="fg">
-            <label>Name <span class="req">*</span></label>
-            <input class="fc" id="fName" placeholder="Full name">
-          </div>
-          <div class="fg">
-            <label>Parentage / Guardian</label>
-            <input class="fc" id="fParentage" placeholder="Father / guardian name">
-          </div>
-          <div class="fg">
-            <label>Age</label>
-            <input class="fc" id="fAge" type="number" min="0" max="150" placeholder="Years">
-          </div>
-          <div class="fg">
-            <label>Gender</label>
-            <select class="fc" id="fGender">
-              <option value="">— Select —</option>
-              <option>Male</option><option>Female</option><option>Other</option>
-            </select>
-          </div>
-          <div class="fg">
-            <label>Weight (kg)</label>
-            <input class="fc" id="fWeight" type="number" step="0.1" min="0" placeholder="e.g. 65.5">
+        <div class="fsec-title">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Patient Identity
+        </div>
+        <div class="fsec-body">
+          <div class="fgrid">
+            <div class="fg">
+              <label>Unique ID <span class="req">*</span></label>
+              <input class="fc" id="fUid" placeholder="Auto…" maxlength="10" autocomplete="off">
+              <span id="uidStatus" style="font-size:.72rem;margin-top:3px;display:none"></span>
+            </div>
+            <div class="fg">
+              <label>Patient Name <span class="req">*</span></label>
+              <input class="fc" id="fName" placeholder="Full name">
+            </div>
+            <div class="fg">
+              <label>Parentage / Guardian</label>
+              <input class="fc" id="fParentage" placeholder="Father / guardian name">
+            </div>
+            <div class="fg">
+              <label>Age</label>
+              <input class="fc" id="fAge" type="number" min="0" max="150" placeholder="Years">
+            </div>
+            <div class="fg">
+              <label>Gender</label>
+              <select class="fc" id="fGender">
+                <option value="">— Select —</option>
+                <option>Male</option><option>Female</option><option>Other</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Weight (kg)</label>
+              <input class="fc" id="fWeight" type="number" step="0.1" min="0" placeholder="e.g. 65.5">
+            </div>
           </div>
         </div>
       </div>
 
+      <!-- Contact -->
       <div class="fsec">
-        <div class="fsec-title">Contact</div>
-        <div class="fgrid fgrid-2">
-          <div class="fg">
-            <label>Phone</label>
-            <input class="fc" id="fPhone" placeholder="+92 300 0000000">
-          </div>
-          <div class="fg">
-            <label>Address</label>
-            <input class="fc" id="fAddress" placeholder="Street, city">
+        <div class="fsec-title">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.88 14.2 19.79 19.79 0 0 1 1.81 5.5 2 2 0 0 1 3.8 3.4h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 10.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.34 1.85.574 2.81.7A2 2 0 0 1 22 17.92z"/></svg>
+          Contact
+        </div>
+        <div class="fsec-body">
+          <div class="fgrid fgrid-2">
+            <div class="fg">
+              <label>Phone</label>
+              <input class="fc" id="fPhone" placeholder="+92 300 0000000">
+            </div>
+            <div class="fg">
+              <label>Address</label>
+              <input class="fc" id="fAddress" placeholder="Street, city">
+            </div>
           </div>
         </div>
       </div>
 
+      <!-- Visit Details -->
       <div class="fsec">
-        <div class="fsec-title">Visit Details</div>
-        <div class="fgrid">
-          <div class="fg">
-            <label>Date <span class="req">*</span></label>
-            <input class="fc" id="fDate" type="date">
-          </div>
-          <div class="fg">
-            <label>Time</label>
-            <input class="fc" id="fTime" type="time">
-          </div>
-          <div class="fg">
-            <label>Visit #</label>
-            <input class="fc" id="fVisit" type="number" min="1" placeholder="Auto">
-          </div>
-          <div class="fg">
-            <label>Allergy</label>
-            <input class="fc" id="fAllergy" placeholder="Known allergies">
+        <div class="fsec-title">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Visit Details
+        </div>
+        <div class="fsec-body">
+          <div class="fgrid">
+            <div class="fg">
+              <label>Date <span class="req">*</span></label>
+              <input class="fc" id="fDate" type="date">
+            </div>
+            <div class="fg">
+              <label>Time</label>
+              <input class="fc" id="fTime" type="time">
+            </div>
+            <div class="fg">
+              <label>Visit #</label>
+              <input class="fc" id="fVisit" type="number" min="1" placeholder="Auto">
+            </div>
+            <div class="fg">
+              <label>Allergy</label>
+              <input class="fc" id="fAllergy" placeholder="Known allergies">
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="fsec">
-        <div class="fsec-title">Clinical Notes</div>
-        <div class="fgrid fgrid-2">
-          <div class="fg">
-            <label>Symptoms / History / Condition</label>
-            <textarea class="fc" id="fSymptoms" rows="3" placeholder="Describe symptoms…"></textarea>
-          </div>
-          <div class="fg">
-            <label>Findings</label>
-            <textarea class="fc" id="fFindings" rows="3" placeholder="Clinical findings…"></textarea>
-          </div>
-          <div class="fg" style="grid-column:1/-1">
-            <label>Treatment</label>
-            <textarea class="fc" id="fTreatment" rows="3" placeholder="Prescribed treatment / medication…"></textarea>
+      <!-- Clinical Notes -->
+      <div class="fsec" style="margin-bottom:0">
+        <div class="fsec-title">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Clinical Notes
+        </div>
+        <div class="fsec-body">
+          <div class="fgrid fgrid-2">
+            <div class="fg">
+              <label>Symptoms / History / Condition</label>
+              <textarea class="fc" id="fSymptoms" rows="3" placeholder="Describe symptoms…"></textarea>
+            </div>
+            <div class="fg">
+              <label>Findings</label>
+              <textarea class="fc" id="fFindings" rows="3" placeholder="Clinical findings…"></textarea>
+            </div>
+            <div class="fg" style="grid-column:1/-1">
+              <label>Treatment</label>
+              <textarea class="fc" id="fTreatment" rows="3" placeholder="Prescribed treatment / medication…"></textarea>
+            </div>
           </div>
         </div>
       </div>
     </form>
   </div>
+
   <div class="modal-foot">
     <button class="btn btn-ghost" onclick="closeModal('formOverlay')">Cancel</button>
     <button class="btn btn-primary" id="saveBtn" onclick="submitForm()">
@@ -556,56 +907,61 @@ textarea.fc{resize:vertical;min-height:68px}
 </div>
 </div>
 
-<!-- ════════════════════════════════════════════════════
+<!-- ══════════════════════════════════════════════════════
      DELETE CONFIRM MODAL
-════════════════════════════════════════════════════ -->
+══════════════════════════════════════════════════════ -->
 <div class="overlay" id="delOverlay">
 <div class="modal conf-modal">
   <div class="modal-hdr">
     <h2>
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-      Delete Record
+      <span class="hdr-icon-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FCA5A5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+      </span>
+      Confirm Deletion
     </h2>
     <button class="modal-x" onclick="closeModal('delOverlay')">✕</button>
   </div>
   <div class="modal-body">
-    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <h3>Are you sure?</h3>
-    <p>This will permanently delete the record for <strong id="delName"></strong>. This cannot be undone.</p>
+    <div class="conf-icon-ring">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <h3>Delete this record?</h3>
+    <p>The record for <strong id="delName"></strong> will be permanently removed and cannot be recovered.</p>
   </div>
   <div class="modal-foot">
     <button class="btn btn-ghost" onclick="closeModal('delOverlay')">Cancel</button>
     <button class="btn btn-danger" onclick="confirmDelete()">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-      Delete
+      Delete Record
     </button>
   </div>
 </div>
 </div>
 
-<!-- ════════════════════════════════════════════════════
-     PDF DOWNLOAD MODAL
-════════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════
+     PDF EXPORT MODAL
+══════════════════════════════════════════════════════ -->
 <div class="overlay" id="pdfOverlay">
 <div class="modal pdf-modal">
   <div class="modal-hdr">
     <h2>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      Download PDF
+      <span class="hdr-icon-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#93C5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </span>
+      Export PDF
     </h2>
     <button class="modal-x" onclick="closeModal('pdfOverlay')">✕</button>
   </div>
   <div class="modal-body">
-
     <div class="pdf-section">
-      <span class="pdf-section-label">Orientation</span>
+      <span class="pdf-section-label">Page Orientation</span>
       <div class="option-group">
         <button class="opt-btn sel" id="opt-portrait" onclick="setPdfOpt('orient','portrait',this)">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><rect x="5" y="2" width="14" height="20" rx="2"/></svg>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/></svg>
           Portrait
         </button>
         <button class="opt-btn" id="opt-landscape" onclick="setPdfOpt('orient','landscape',this)">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><rect x="2" y="5" width="20" height="14" rx="2"/></svg>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/></svg>
           Landscape
         </button>
       </div>
@@ -628,9 +984,9 @@ textarea.fc{resize:vertical;min-height:68px}
   </div>
   <div class="modal-foot">
     <button class="btn btn-ghost" onclick="closeModal('pdfOverlay')">Cancel</button>
-    <button class="btn btn-primary" onclick="generatePDF()" style="background:#dc2626">
+    <button class="btn btn-danger" onclick="generatePDF()">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Download PDF
+      Export PDF
     </button>
   </div>
 </div>
@@ -638,9 +994,20 @@ textarea.fc{resize:vertical;min-height:68px}
 
 <div id="toasts"></div>
 
-<!-- ════════════════════════════════════════════════════
+<!-- Live date in header -->
+<script>
+(function(){
+  const el = document.getElementById('hdDate');
+  if(el){
+    el.textContent = new Date().toLocaleDateString('en-US',
+      {weekday:'short',month:'short',day:'numeric',year:'numeric'});
+  }
+})();
+</script>
+
+<!-- ══════════════════════════════════════════════════════
      JAVASCRIPT
-════════════════════════════════════════════════════ -->
+══════════════════════════════════════════════════════ -->
 <script>
 // ── Column Config ────────────────────────────────────────
 const COLS = [
@@ -805,12 +1172,12 @@ function renderTable(rows) {
   tbody.innerHTML = rows.map((r, i) => {
     const gc = r.gender==='Male'?'m':r.gender==='Female'?'f':'o';
     return `<tr>
-      <td class="col-num" style="color:var(--gray-400);font-size:.73rem">${offset+i+1}</td>
+      <td class="col-num">${offset+i+1}</td>
       <td class="col-uid"><span class="uid-badge">${esc(r.unique_id)}</span></td>
       <td class="col-date">${fmtDate(r.date)}</td>
       <td class="col-time">${fmtTime(r.time)}</td>
       <td class="col-visit"><span class="visit-badge">${esc(r.visit_number)}</span></td>
-      <td class="col-name" style="font-weight:600;color:var(--gray-800)">${esc(r.name)}</td>
+      <td class="col-name"><span class="name-cell">${esc(r.name)}</span></td>
       <td class="col-parentage">${esc(r.parentage)||'—'}</td>
       <td class="col-age">${r.age||'—'}</td>
       <td class="col-gender">${r.gender?`<span class="g-badge g-${gc}">${esc(r.gender)}</span>`:'—'}</td>
@@ -895,7 +1262,9 @@ async function openAddModal() {
   document.getElementById('fVisit').value = '';
 
   document.getElementById('modalTitle').innerHTML = `
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    <span class="hdr-icon-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#93C5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    </span>
     Add New Record`;
 
   // Open modal IMMEDIATELY — don't wait for API
@@ -930,7 +1299,9 @@ async function openEditModal(id) {
   document.querySelectorAll('.fc.invalid').forEach(el => el.classList.remove('invalid'));
 
   document.getElementById('modalTitle').innerHTML = `
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    <span class="hdr-icon-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#93C5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    </span>
     Edit Record`;
 
   const uidSt = document.getElementById('uidStatus');
